@@ -1,0 +1,10 @@
+= yield
+:javascript
+  Railx.postloads = #{session[:railx].to_json}
+  console.log(Railx.postloads)
+- session[:railx] = {}
+- flash.each do |key, value|
+  :javascript
+    Railx.raise({type: "#{key}", text: "#{value}"})
+- if File.exists? File.join(Rails.root, "app", "views", "layouts", "_ajax.html.haml")
+  = render "layouts/ajax"
