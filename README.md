@@ -18,30 +18,24 @@ The goal of rails is to make easy a full customizable ajax experience within a r
 
 Add this line to your application's Gemfile:
 
-    gem 'railx'
+    gem "railx", :git => "https://github.com/sekipaolo/railx.git"
 
 And then execute:
 
     $ bundle install
 
-Or install it yourself as:
-
-    $ gem install railx
 
 ## Usage
 
 Add following lines to your app/assets/javascripts/application.js
 
-		//= require jquery
-		//= require jquery_ujs
-		//= require_tree .
+		//= require railx
 
 then in app/assets/stylesheets/application.css
 
-		*= require_self
-		*= require_tree .
 		*= require railx
 		*/
+		
 Now all your links will trigger an ajax call, filling the body with the content of the response.
 
 You can configure a default target for all links in your javascript files in this way:

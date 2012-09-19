@@ -1,40 +1,15 @@
 
 $(document).ready ->
-  $("body").append("<div id='none' style ='display:none'></div>")
-
-$("a").live "click", (e) ->
-  e.preventDefault()
-  url = $(this).attr("href").replace(location.protocol + "//" + location.host, "")
-  target = (if @dataset.target then ("#" + @dataset.target) else "container")
-  s = History.getState()
-  console.log s.url    
-  console.log document.location.origin + url
-  if s.url == document.location.origin + url
-    ajaxLoader
-      url: url
-      target: target
-  else  
-    History.pushState
-      target: target
-    , document.title, url
-    
-History.Adapter.bind window, "statechange", -> # Note: We are using statechange instead of popstate
-  state = History.getState() # Note: We are using History.getState() instead of event.state
-  target = state.target || "#{window.Railx.default_target}"    
-  console.log(target)
-  ajaxLoader
-    url: state.url
-    target: target
+  Railx.init()
   
-console.log("montato")
 window.Railx = {
   default_target: "body",
-  link_selector: "a",
-  form_selector: "form",
   postloads: null,
   use_gritter: true,
+  link_selector: "a:not(.noajax)",
+  form_selector: "form:not(.noajax)", 
   _postload: ->
-    $("form").ajax_form()
+    $(@form_selector).ajax_form()
     if @.postloads
       console.log @.postloads
       if @.postloads.update
@@ -53,7 +28,55 @@ window.Railx = {
     if @use_gritter 
       $.gritter.add(args)
     console.log(args)                
-  postload: ->    
-    
+  start_loading: (text) ->
+   $("#loading_text").html(text) 
+   $("#loading").show()     
+  stop_loading: ->
+   $("#loading").hide()     
+  ajax: (options) ->
+    @start_loading()
+    $.ajax
+      url: options.url
+      type: options.method
+      success: (data) ->
+        target = options.target
+        $(target).html(data) 
+        Railx._postload()
+      complete: (data, status) -> 
+        Railx.stop_loading()
+        if status == "error"
+          Railx.raise
+            type: "error"
+            text: data.error().statusText    
+          console.log status, data    
+  postload: ->      
+                 
+  init: ->
+    # Append a div for ajax requests that don't need to fill content 
+    $("body").append("<div id='none' style ='display:none'></div>") 
+    if $("#loading").length == 0
+      $("body").append("<div id='loading'><div id='loading_text'></div></div>")
+    # manage history 
+    History.Adapter.bind window, "statechange", -> # Note: We are using statechange instead of popstate
+      state = History.getState() # Note: We are using History.getState() instead of event.state
+      target = state.target || "#{window.Railx.default_target}"    
+      console.log(target)
+      Railx.ajax
+        url: state.url
+        target: target
+    # ajaxify links
+    $(@link_selector).live "click", (e) ->
+      e.preventDefault()
+      url = $(this).attr("href").replace(location.protocol + "//" + location.host, "")
+      target = (if @dataset.target then ("#" + @dataset.target) else @default_target)
+      s = History.getState()
+      if s.url == document.location.origin + url
+        Railx.ajax
+          url: url
+          target: target
+      else  
+        History.pushState
+          target: target
+        , document.title, url                   
 }
 

@@ -1,7 +1,10 @@
 module RailxController
-  
+  @ajax_render_filters = []
   def updatediv id, partial, args = {}
+    puts id
+    puts partial
     if request.xhr?
+      
       session[:railx] = {} unless session[:railx].present?
       session[:railx][:update] = [] unless session[:railx][:update].present?
       session[:railx][:update] << {
@@ -13,7 +16,6 @@ module RailxController
     end  
   end
         
-
   def redirect_to(options = {}, response_status = {})
     puts "called redirect #{response_status}"
     if request.xhr?
