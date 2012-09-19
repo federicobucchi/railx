@@ -15,8 +15,10 @@
           console.log("status", status)                       
           Railx._postload()
         complete: (response, status, xhr, form) ->
+          Railx.stop_loading()
           console.log "ERROR", response, status, xhr
-        beforeSubmit: (data, form, options) ->          
+        beforeSubmit: (data, form, options) ->  
+          Railx.start_loading()        
       $(@).ajaxForm opt 
 ) jQuery 
 

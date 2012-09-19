@@ -6,7 +6,7 @@ window.Railx = {
   default_target: "body",
   postloads: null,
   use_gritter: true,
-  link_selector: "a:not(.noajax)",
+  link_selector: "a[href!='javascript:;']:not(.noajax)",
   form_selector: "form:not(.noajax)", 
   _postload: ->
     $(@form_selector).ajax_form()
