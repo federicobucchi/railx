@@ -20,14 +20,14 @@ window.Railx = {
         History.pushState
           target: @.postloads.redirect.target
         , document.title, @.postloads.redirect.url   
-    @.postload()         
+    @.postload()
   raise: (args) -> # text, type, sticky
     args.image = ("/assets/" + args.type + ".png")
     args.title = args.type
     args.sticky = args.sticky || false
-    if @use_gritter 
+    if @use_gritter
       $.gritter.add(args)
-    console.log(args)                
+    console.log(args)
   start_loading: (text) ->
    $("#loading_text").html(text) 
    $("#loading").show()     
@@ -77,6 +77,7 @@ window.Railx = {
       else  
         History.pushState
           target: target
-        , document.title, url                   
+        , document.title, url   
+    @_postload()                
 }
 

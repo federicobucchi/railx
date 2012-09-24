@@ -7,8 +7,7 @@
         headers:
           TARGET: target
         target: $(target)
-        type: @method || "POST"
-        
+        type: @method || "POST"        
         # TODO fix jquery.form.js 165 -182            
         iframe: false 
         success: (response, status, xhr, form) ->  
