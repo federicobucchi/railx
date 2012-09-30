@@ -2,7 +2,7 @@
   $.fn.ajax_form = ->
     @each ->
       target = @dataset.target || Railx.default_target
-      console.log(target)
+      #console.log(target)
       opt =
         headers:
           TARGET: target
@@ -15,7 +15,11 @@
           Railx._postload()
         complete: (response, status, xhr, form) ->
           Railx.stop_loading()
-          console.log "ERROR", response, status, xhr
+          if response.status != 200
+            Railx.raise
+              type: "error"
+              text: response.statusText
+          
         beforeSubmit: (data, form, options) ->  
           Railx.start_loading()        
       $(@).ajaxForm opt 
