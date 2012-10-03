@@ -40,7 +40,9 @@ window.Railx = {
       type: options.method
       success: (data) ->
         target = options.target
+        console.log "target:", target
         $(target).html(data) 
+        console.log "fatto"
         Railx._postload()
       complete: (data, status) -> 
         Railx.stop_loading()
