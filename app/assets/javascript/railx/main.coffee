@@ -1,4 +1,4 @@
-
+console.log "montato 2"
 $(document).ready ->
   Railx.init()
   
